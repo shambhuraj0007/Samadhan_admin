@@ -7,15 +7,22 @@ import {
   Filter,
   SortAsc,
   Eye,
-  User
+  User,
+  Plus,
+  MapPin,
+  Calendar
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { IssueDetailModal } from "@/components/issues/IssueDetailModal";
+import { DataTable } from "@/components/ui/data-table";
 
 const Issues = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedIssue, setSelectedIssue] = useState<any>(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
 
   const mockIssues = [
     {
@@ -113,6 +120,92 @@ const Issues = () => {
     issue.id.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleViewDetails = (issue: any) => {
+    setSelectedIssue(issue);
+    setShowDetailModal(true);
+  };
+
+  const tableColumns = [
+    {
+      key: 'id' as const,
+      header: 'Issue ID',
+      sortable: true,
+      render: (value: string) => (
+        <span className="font-mono text-sm">{value}</span>
+      )
+    },
+    {
+      key: 'title' as const,
+      header: 'Title',
+      sortable: true,
+      render: (value: string) => (
+        <span className="font-medium">{value}</span>
+      )
+    },
+    {
+      key: 'category' as const,
+      header: 'Category',
+      sortable: true,
+    },
+    {
+      key: 'status' as const,
+      header: 'Status',
+      sortable: true,
+      render: (value: string) => (
+        <Badge variant={getStatusVariant(value)} className="flex items-center space-x-1 w-fit">
+          {getStatusIcon(value)}
+          <span>{value}</span>
+        </Badge>
+      )
+    },
+    {
+      key: 'priority' as const,
+      header: 'Priority',
+      sortable: true,
+      render: (value: string) => (
+        <Badge variant={getPriorityVariant(value)}>
+          {value}
+        </Badge>
+      )
+    },
+    {
+      key: 'assignedTo' as const,
+      header: 'Assigned To',
+      sortable: true,
+      render: (value: string) => (
+        <div className="flex items-center space-x-1">
+          <User className="w-3 h-3" />
+          <span className="text-sm">{value}</span>
+        </div>
+      )
+    },
+    {
+      key: 'createdAt' as const,
+      header: 'Created',
+      sortable: true,
+      render: (value: string) => (
+        <div className="flex items-center space-x-1">
+          <Calendar className="w-3 h-3 text-muted-foreground" />
+          <span className="text-sm">{value}</span>
+        </div>
+      )
+    },
+    {
+      key: 'actions' as const,
+      header: 'Actions',
+      render: (_: any, row: any) => (
+        <Button 
+          variant="outline" 
+          size="sm"
+          onClick={() => handleViewDetails(row)}
+        >
+          <Eye className="w-4 h-4 mr-2" />
+          View
+        </Button>
+      )
+    },
+  ];
+
   return (
     <div className="flex flex-col min-h-full">
       {/* Page Header */}
@@ -153,63 +246,37 @@ const Issues = () => {
         </div>
       </div>
 
-      {/* Issues List */}
-      <div className="flex-1 p-6">
-        <div className="space-y-4">
-          {filteredIssues.map((issue) => (
-            <Card key={issue.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-2">
-                      <span className="text-sm font-mono text-muted-foreground">{issue.id}</span>
-                      <Badge variant={getStatusVariant(issue.status)} className="flex items-center space-x-1">
-                        {getStatusIcon(issue.status)}
-                        <span>{issue.status}</span>
-                      </Badge>
-                      <Badge variant={getPriorityVariant(issue.priority)}>
-                        {issue.priority} Priority
-                      </Badge>
-                    </div>
-                    
-                    <h3 className="text-lg font-semibold text-foreground mb-2">{issue.title}</h3>
-                    <p className="text-muted-foreground mb-3">{issue.description}</p>
-                    
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-                      <div>
-                        <span className="text-muted-foreground">Category:</span>
-                        <p className="font-medium">{issue.category}</p>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Location:</span>
-                        <p className="font-medium">{issue.location}</p>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Assigned To:</span>
-                        <p className="font-medium flex items-center">
-                          <User className="w-3 h-3 mr-1" />
-                          {issue.assignedTo}
-                        </p>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Department:</span>
-                        <p className="font-medium">{issue.department}</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2 ml-4">
-                    <Button variant="outline" size="sm">
-                      <Eye className="w-4 h-4 mr-2" />
-                      View Details
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+      {/* Issues Content */}
+      <div className="flex-1 p-6 space-y-6">
+        {/* View Toggle */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <Button variant="default" size="sm">
+              Table View
+            </Button>
+            <Button variant="outline" size="sm">
+              Card View
+            </Button>
+          </div>
+          <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+            <span>Showing {filteredIssues.length} of {mockIssues.length} issues</span>
+          </div>
         </div>
+
+        {/* Data Table */}
+        <DataTable 
+          data={filteredIssues.map(issue => ({ ...issue, actions: null }))}
+          columns={tableColumns}
+          pageSize={10}
+        />
       </div>
+
+      {/* Issue Detail Modal */}
+      <IssueDetailModal
+        isOpen={showDetailModal}
+        onClose={() => setShowDetailModal(false)}
+        issue={selectedIssue}
+      />
     </div>
   );
 };

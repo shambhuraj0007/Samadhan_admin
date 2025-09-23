@@ -9,6 +9,7 @@ import {
   Filter
 } from "lucide-react";
 import { KPICard } from "@/components/dashboard/KPICard";
+import { MapComponent } from "@/components/dashboard/MapComponent";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -93,7 +94,7 @@ const Index = () => {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {/* Top Performers */}
           <Card>
             <CardHeader>
@@ -122,7 +123,7 @@ const Index = () => {
           </Card>
 
           {/* Priority Issues */}
-          <Card className="lg:col-span-2">
+          <Card className="xl:col-span-2">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <AlertTriangle className="w-5 h-5 mr-2 text-error" />
@@ -157,6 +158,58 @@ const Index = () => {
                     </Button>
                   </div>
                 ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Map and Additional Info */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div className="xl:col-span-2">
+            <MapComponent />
+          </div>
+          
+          {/* Quick Stats */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Department Status</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-sm">Public Works</span>
+                <div className="flex items-center space-x-2">
+                  <div className="w-16 h-2 bg-muted rounded-full">
+                    <div className="w-12 h-2 bg-primary rounded-full"></div>
+                  </div>
+                  <span className="text-xs text-muted-foreground">75%</span>
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm">Parks & Recreation</span>
+                <div className="flex items-center space-x-2">
+                  <div className="w-16 h-2 bg-muted rounded-full">
+                    <div className="w-14 h-2 bg-secondary rounded-full"></div>
+                  </div>
+                  <span className="text-xs text-muted-foreground">88%</span>
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm">Traffic Management</span>
+                <div className="flex items-center space-x-2">
+                  <div className="w-16 h-2 bg-muted rounded-full">
+                    <div className="w-10 h-2 bg-accent rounded-full"></div>
+                  </div>
+                  <span className="text-xs text-muted-foreground">62%</span>
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm">Electrical</span>
+                <div className="flex items-center space-x-2">
+                  <div className="w-16 h-2 bg-muted rounded-full">
+                    <div className="w-11 h-2 bg-warning rounded-full"></div>
+                  </div>
+                  <span className="text-xs text-muted-foreground">68%</span>
+                </div>
               </div>
             </CardContent>
           </Card>
