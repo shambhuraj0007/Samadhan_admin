@@ -1,53 +1,25 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { 
-  LayoutDashboard, 
-  AlertTriangle, 
-  BarChart3, 
-  Users, 
-  Settings, 
+import {
+  LayoutDashboard,
+  AlertTriangle,
+  BarChart3,
+  Users,
+  Settings,
   ChevronLeft,
   FileText,
-  MapPin
+  MapPin,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navigationItems = [
-  {
-    title: "Dashboard",
-    href: "/",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Issues",
-    href: "/issues",
-    icon: AlertTriangle,
-  },
-  {
-    title: "Analytics",
-    href: "/analytics",
-    icon: BarChart3,
-  },
-  {
-    title: "Map View",
-    href: "/map",
-    icon: MapPin,
-  },
-  {
-    title: "Reports",
-    href: "/reports",
-    icon: FileText,
-  },
-  {
-    title: "Users",
-    href: "/users",
-    icon: Users,
-  },
-  {
-    title: "Settings",
-    href: "/settings",
-    icon: Settings,
-  },
+  { title: "Dashboard", href: "/", icon: LayoutDashboard, color: "text-blue-500", active: "bg-blue-500 text-white" },
+  { title: "Issues", href: "/issues", icon: AlertTriangle, color: "text-red-500", active: "bg-red-500 text-white" },
+  { title: "Analytics", href: "/analytics", icon: BarChart3, color: "text-green-500", active: "bg-green-500 text-white" },
+  { title: "Map View", href: "/map", icon: MapPin, color: "text-purple-500", active: "bg-purple-500 text-white" },
+  { title: "Reports", href: "/reports", icon: FileText, color: "text-yellow-500", active: "bg-yellow-500 text-white" },
+  { title: "Users", href: "/users", icon: Users, color: "text-pink-500", active: "bg-pink-500 text-white" },
+  { title: "Settings", href: "/settings", icon: Settings, color: "text-gray-600", active: "bg-gray-600 text-white" },
 ];
 
 export function Sidebar() {
@@ -56,7 +28,7 @@ export function Sidebar() {
   return (
     <div
       className={cn(
-        "relative flex flex-col h-full bg-card border-r border-border transition-all duration-300",
+        "relative flex flex-col h-full bg-card border-r border-border transition-all duration-300 shadow-md",
         collapsed ? "w-16" : "w-64"
       )}
     >
@@ -64,11 +36,13 @@ export function Sidebar() {
       <div className="flex items-center justify-between p-4 border-b border-border">
         {!collapsed && (
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <AlertTriangle className="w-5 h-5 text-primary-foreground" />
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center shadow-sm bg-gradient-to-r from-indigo-500 to-purple-500">
+              <AlertTriangle className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-lg font-semibold text-foreground">CivicManager</h1>
+              <h1 className="text-lg font-bold text-foreground tracking-wide">
+                CivicManager
+              </h1>
               <p className="text-xs text-muted-foreground">Municipal Portal</p>
             </div>
           </div>
@@ -95,25 +69,46 @@ export function Sidebar() {
             end={item.href === "/"}
             className={({ isActive }) =>
               cn(
-                "flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
-                "hover:bg-muted hover:text-foreground",
+                "relative flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+                "hover:scale-[1.03] active:scale-95",
                 isActive
-                  ? "bg-primary text-primary-foreground shadow-md"
-                  : "text-muted-foreground",
+                  ? `${item.active} shadow-md`
+                  : `text-muted-foreground hover:bg-muted hover:${item.color}`,
                 collapsed && "justify-center"
               )
             }
             title={collapsed ? item.title : undefined}
           >
-            <item.icon className="w-5 h-5" />
-            {!collapsed && <span>{item.title}</span>}
+            {({ isActive }) => (
+              <>
+                {isActive && (
+                  <span
+                    className={cn(
+                      "absolute left-0 w-1 h-6 rounded-r-full",
+                      item.active.split(" ")[0] // matches bg color
+                    )}
+                  />
+                )}
+                <item.icon className={cn("w-5 h-5 relative z-10", !isActive && item.color)} />
+                {!collapsed && (
+                  <span className="transition-opacity duration-300">
+                    {item.title}
+                  </span>
+                )}
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-border">
-        <div className={cn("text-xs text-muted-foreground", collapsed && "text-center")}>
+      <div className="p-4 border-t border-border bg-muted/30">
+        <div
+          className={cn(
+            "text-xs text-muted-foreground font-medium",
+            collapsed && "text-center"
+          )}
+        >
           {!collapsed ? "Municipal Staff Portal v1.0" : "v1.0"}
         </div>
       </div>

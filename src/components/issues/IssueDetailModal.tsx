@@ -248,7 +248,7 @@ export const IssueDetailModal = ({
               </Button>
               <Button 
                 variant="outline" 
-                className="w-full" 
+                className="w-full bg-green-600" 
                 size="sm"
                 onClick={() => setShowAssignmentModal(true)}
                 disabled={userRole === 'Staff'}
@@ -256,7 +256,7 @@ export const IssueDetailModal = ({
                 <UserCheck className="w-4 h-4 mr-2" />
                 Reassign
               </Button>
-              <Button 
+              {/* <Button 
                 variant="outline" 
                 className="w-full" 
                 size="sm"
@@ -265,7 +265,7 @@ export const IssueDetailModal = ({
               >
                 <Edit className="w-4 h-4 mr-2" />
                 Edit Details
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>

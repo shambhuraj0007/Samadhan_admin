@@ -15,15 +15,21 @@ export function Header() {
     <header className="flex items-center justify-between px-6 py-4 bg-card border-b border-border">
       {/* Search */}
       <div className="flex items-center space-x-4 flex-1 max-w-md">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search issues, locations, or staff..."
-            className="w-full pl-10 pr-4 py-2 bg-muted rounded-lg border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
-          />
-        </div>
-      </div>
+  <div className="relative flex-1">
+    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-indigo-500 pointer-events-none" />
+      <input
+        type="text"
+        placeholder="Search issues, locations, or staff..."
+        className="w-full pl-12 pr-4 py-2.5 rounded-full 
+                  bg-gradient-to-r from-pink-50 via-purple-50 to-blue-50 
+                  border border-transparent 
+                  text-sm text-gray-700 placeholder-gray-500
+                  focus:outline-none focus:ring-2 focus:ring-offset-1 
+                  focus:ring-pink-400 focus:border-transparent 
+                  shadow-sm hover:shadow-md transition-all duration-300"
+      />
+    </div>
+  </div>
 
       {/* Actions */}
       <div className="flex items-center space-x-4">
@@ -50,7 +56,7 @@ export function Header() {
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">John Officer</p>
+                <p className="text-sm font-medium leading-none">Aryan Bahubali</p>
                 <p className="text-xs leading-none text-muted-foreground">
                   Department Head - Public Works
                 </p>

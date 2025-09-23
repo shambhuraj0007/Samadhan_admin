@@ -1,4 +1,4 @@
-import { LucideIcon } from "lucide-react";
+import { LucideIcon, ArrowUp, ArrowDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
@@ -11,7 +11,7 @@ interface KPICardProps {
     value: number;
     isPositive: boolean;
   };
-  variant?: "default" | "success" | "warning" | "error";
+  variant?: "default" | "success" | "warning" | "error" | "primary";
 }
 
 export function KPICard({ 
@@ -23,46 +23,50 @@ export function KPICard({
   variant = "default" 
 }: KPICardProps) {
   const variantStyles = {
-    default: "border-border",
-    success: "border-success/20 bg-success/5",
-    warning: "border-warning/20 bg-warning/5",
-    error: "border-error/20 bg-error/5",
+    default: "bg-gradient-to-r from-purple-200 via-pink-200 to-red-200 border-none",
+    success: "bg-gradient-to-r from-green-200 via-green-300 to-green-400 border-none",
+    warning: "bg-gradient-to-r from-yellow-200 via-yellow-300 to-yellow-400 border-none",
+    error: "bg-gradient-to-r from-red-200 via-red-300 to-red-400 border-none",
+    primary: "bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 border-none",
   };
 
-  const iconStyles = {
-    default: "text-primary",
-    success: "text-success",
-    warning: "text-warning",
-    error: "text-error",
+  const iconBg = {
+    default: "bg-purple-100",
+    success: "bg-green-100",
+    warning: "bg-yellow-100",
+    error: "bg-red-100",
+    primary: "bg-indigo-100",
   };
+
+  const trendIcon = trend?.isPositive ? ArrowUp : ArrowDown;
 
   return (
-    <Card className={cn("transition-all duration-200 hover:shadow-md", variantStyles[variant])}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
-          {title}
-        </CardTitle>
-        <Icon className={cn("h-4 w-4", iconStyles[variant])} />
+    <Card
+      className={cn(
+        "rounded-2xl overflow-hidden shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl",
+        variantStyles[variant]
+      )}
+    >
+      <CardHeader className="flex items-center justify-between pb-2">
+        <CardTitle className="text-sm font-semibold text-gray-800">{title}</CardTitle>
+        <div className={cn("p-2 rounded-full", iconBg[variant])}>
+          <Icon className="h-6 w-6 text-white" />
+        </div>
       </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold text-foreground">{value}</div>
+      <CardContent className="pt-0">
+        <div className="text-3xl font-bold text-gray-900">{value}</div>
         {description && (
-          <p className="text-xs text-muted-foreground mt-1">
-            {description}
-          </p>
+          <p className="text-xs text-gray-700 mt-1">{description}</p>
         )}
         {trend && (
-          <div className="flex items-center mt-2">
-            <span
-              className={cn(
-                "text-xs font-medium",
-                trend.isPositive ? "text-success" : "text-error"
-              )}
-            >
-              {trend.isPositive ? "+" : ""}{trend.value}%
-            </span>
-            <span className="text-xs text-muted-foreground ml-1">from last month</span>
-          </div>
+          <span
+            className={cn(
+              "inline-flex items-center px-2 py-1 mt-3 rounded-full text-sm font-medium",
+              trend.isPositive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+            )}
+          >
+            {trend.isPositive ? "+" : ""}{trend.value}%
+          </span>
         )}
       </CardContent>
     </Card>
