@@ -36,14 +36,19 @@ export function Header() {
   {/* Row for logo + title */}
   <div className="flex items-center space-x-3">
     <img
-      src="/logo.jpg" // if in /public
+      src="/logo.jpg"
       alt="Logo"
       className="w-16 h-18 mt-3 rounded-full object-cover shadow-md"
     />
-    <div className="text-5xl font-bold text-primary leading-tight">
+    <div className="font-bold text-primary leading-tight text-[clamp(1.5rem, 5vw, 3rem)]">
       समाधान-Admin
     </div>
   </div>
+
+  <div className="text-sm text-muted-foreground mt-2">
+    - आत्मनिर्भर भारत
+  </div>
+</div>
 
   
   <div className="text-sm text-muted-foreground mt-2">
