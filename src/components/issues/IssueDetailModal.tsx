@@ -7,7 +7,10 @@ import {
   Clock, 
   MessageSquare,
   Image as ImageIcon,
-  X
+  X,
+  Edit,
+  UserCheck,
+  RefreshCw
 } from 'lucide-react';
 import {
   Dialog,
@@ -19,10 +22,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { StatusUpdateModal } from "./StatusUpdateModal";
+import { AssignmentModal } from "./AssignmentModal";
+import { EditDetailsModal } from "./EditDetailsModal";
 
 interface IssueDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
+  userRole: string;
+  onStatusUpdate: (issueId: string, newStatus: string, comment: string) => void;
+  onAssignment: (issueId: string, department: string, assignee: string, comment: string) => void;
+  onEditDetails: (issueId: string, updatedIssue: any) => void;
   issue: {
     id: string;
     title: string;
@@ -37,8 +47,19 @@ interface IssueDetailModalProps {
   } | null;
 }
 
-export const IssueDetailModal = ({ isOpen, onClose, issue }: IssueDetailModalProps) => {
+export const IssueDetailModal = ({ 
+  isOpen, 
+  onClose, 
+  issue, 
+  userRole,
+  onStatusUpdate,
+  onAssignment,
+  onEditDetails 
+}: IssueDetailModalProps) => {
   const [newComment, setNewComment] = useState('');
+  const [showStatusModal, setShowStatusModal] = useState(false);
+  const [showAssignmentModal, setShowAssignmentModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   if (!issue) return null;
 
@@ -217,19 +238,65 @@ export const IssueDetailModal = ({ isOpen, onClose, issue }: IssueDetailModalPro
 
             {/* Actions */}
             <div className="space-y-2">
-              <Button className="w-full" size="sm">
+              <Button 
+                className="w-full" 
+                size="sm"
+                onClick={() => setShowStatusModal(true)}
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
                 Update Status
               </Button>
-              <Button variant="outline" className="w-full" size="sm">
+              <Button 
+                variant="outline" 
+                className="w-full" 
+                size="sm"
+                onClick={() => setShowAssignmentModal(true)}
+                disabled={userRole === 'Staff'}
+              >
+                <UserCheck className="w-4 h-4 mr-2" />
                 Reassign
               </Button>
-              <Button variant="outline" className="w-full" size="sm">
+              <Button 
+                variant="outline" 
+                className="w-full" 
+                size="sm"
+                onClick={() => setShowEditModal(true)}
+                disabled={userRole === 'Staff'}
+              >
+                <Edit className="w-4 h-4 mr-2" />
                 Edit Details
               </Button>
             </div>
           </div>
         </div>
       </DialogContent>
+
+      {/* Status Update Modal */}
+      <StatusUpdateModal
+        isOpen={showStatusModal}
+        onClose={() => setShowStatusModal(false)}
+        issue={issue}
+        userRole={userRole}
+        onStatusUpdate={onStatusUpdate}
+      />
+
+      {/* Assignment Modal */}
+      <AssignmentModal
+        isOpen={showAssignmentModal}
+        onClose={() => setShowAssignmentModal(false)}
+        issue={issue}
+        userRole={userRole}
+        onAssign={onAssignment}
+      />
+
+      {/* Edit Details Modal */}
+      <EditDetailsModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        issue={issue}
+        userRole={userRole}
+        onSave={onEditDetails}
+      />
     </Dialog>
   );
 };

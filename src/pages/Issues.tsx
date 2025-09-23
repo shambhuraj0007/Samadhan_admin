@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { 
   AlertTriangle, 
   Clock, 
@@ -18,13 +19,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { IssueDetailModal } from "@/components/issues/IssueDetailModal";
 import { DataTable } from "@/components/ui/data-table";
+import { FilterPanel } from "@/components/issues/FilterPanel";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const Issues = () => {
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedIssue, setSelectedIssue] = useState<any>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
-
-  const mockIssues = [
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({
+    status: '',
+    priority: '',
+    category: '',
+    department: ''
+  });
+  const [issues, setIssues] = useState([
+    // Mock data that will be updated
     {
       id: "ISS-2024-1245",
       title: "Water main break on Main Street",
@@ -73,7 +84,26 @@ const Issues = () => {
       location: "Central Park",
       description: "Swing set chains are broken, creating safety hazard for children."
     },
-  ];
+  ]);
+
+  // Functions to handle issue updates
+  const handleStatusUpdate = (issueId: string, newStatus: string, comment: string) => {
+    setIssues(prev => prev.map(issue => 
+      issue.id === issueId ? { ...issue, status: newStatus } : issue
+    ));
+  };
+
+  const handleAssignment = (issueId: string, department: string, assignee: string, comment: string) => {
+    setIssues(prev => prev.map(issue => 
+      issue.id === issueId ? { ...issue, department, assignedTo: assignee } : issue
+    ));
+  };
+
+  const handleEditDetails = (issueId: string, updatedIssue: any) => {
+    setIssues(prev => prev.map(issue => 
+      issue.id === issueId ? { ...issue, ...updatedIssue } : issue
+    ));
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -114,11 +144,18 @@ const Issues = () => {
     }
   };
 
-  const filteredIssues = mockIssues.filter(issue =>
-    issue.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    issue.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    issue.id.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredIssues = issues.filter(issue => {
+    const matchesSearch = issue.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      issue.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      issue.id.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesStatus = !filters.status || issue.status === filters.status;
+    const matchesPriority = !filters.priority || issue.priority === filters.priority;
+    const matchesCategory = !filters.category || issue.category === filters.category;
+    const matchesDepartment = !filters.department || issue.department === filters.department;
+    
+    return matchesSearch && matchesStatus && matchesPriority && matchesCategory && matchesDepartment;
+  });
 
   const handleViewDetails = (issue: any) => {
     setSelectedIssue(issue);
@@ -235,7 +272,11 @@ const Issues = () => {
               />
             </div>
           </div>
-          <Button variant="outline" size="sm">
+          <Button 
+            variant={showFilters ? "default" : "outline"} 
+            size="sm"
+            onClick={() => setShowFilters(!showFilters)}
+          >
             <Filter className="w-4 h-4 mr-2" />
             Filter
           </Button>
@@ -248,6 +289,13 @@ const Issues = () => {
 
       {/* Issues Content */}
       <div className="flex-1 p-6 space-y-6">
+        {/* Filter Panel */}
+        <FilterPanel
+          isOpen={showFilters}
+          onClose={() => setShowFilters(false)}
+          filters={filters}
+          onFiltersChange={setFilters}
+        />
         {/* View Toggle */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
@@ -259,7 +307,7 @@ const Issues = () => {
             </Button>
           </div>
           <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-            <span>Showing {filteredIssues.length} of {mockIssues.length} issues</span>
+            <span>Showing {filteredIssues.length} of {issues.length} issues</span>
           </div>
         </div>
 
@@ -276,6 +324,10 @@ const Issues = () => {
         isOpen={showDetailModal}
         onClose={() => setShowDetailModal(false)}
         issue={selectedIssue}
+        userRole={user?.role || 'Staff'}
+        onStatusUpdate={handleStatusUpdate}
+        onAssignment={handleAssignment}
+        onEditDetails={handleEditDetails}
       />
     </div>
   );

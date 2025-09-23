@@ -147,6 +147,27 @@ const Map = () => {
             </CardContent>
           </Card>
 
+          {/* Issue Density Heatmap Data */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Issue Density</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm">High Density Areas</span>
+                <Badge variant="destructive" className="text-xs">5 zones</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Medium Density Areas</span>
+                <Badge variant="secondary" className="text-xs">8 zones</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Low Density Areas</span>
+                <Badge variant="outline" className="text-xs">12 zones</Badge>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Recent Issues */}
           <Card>
             <CardHeader className="pb-3">
@@ -209,12 +230,25 @@ const Map = () => {
               </div>
             ))}
 
-            {/* Heatmap Overlay */}
+            {/* Enhanced Heatmap Overlay */}
             {selectedLayers.heatmap && (
               <>
-                <div className="absolute top-1/4 left-1/3 w-24 h-24 bg-red-500/20 rounded-full blur-lg"></div>
-                <div className="absolute top-1/2 right-1/4 w-20 h-20 bg-yellow-500/20 rounded-full blur-lg"></div>
-                <div className="absolute bottom-1/3 left-1/4 w-16 h-16 bg-orange-500/20 rounded-full blur-lg"></div>
+                {/* High density zones */}
+                <div className="absolute top-1/4 left-1/3 w-32 h-32 bg-red-500/30 rounded-full blur-xl"></div>
+                <div className="absolute top-1/5 left-1/4 w-20 h-20 bg-red-400/25 rounded-full blur-lg"></div>
+                
+                {/* Medium density zones */}
+                <div className="absolute top-1/2 right-1/4 w-28 h-28 bg-yellow-500/25 rounded-full blur-xl"></div>
+                <div className="absolute top-3/5 right-1/3 w-24 h-24 bg-orange-400/20 rounded-full blur-lg"></div>
+                <div className="absolute bottom-1/3 left-1/5 w-26 h-26 bg-orange-500/25 rounded-full blur-xl"></div>
+                
+                {/* Low density zones */}
+                <div className="absolute bottom-1/4 right-1/5 w-16 h-16 bg-green-400/15 rounded-full blur-lg"></div>
+                <div className="absolute top-3/4 left-2/3 w-18 h-18 bg-green-500/20 rounded-full blur-lg"></div>
+                
+                {/* Additional scattered heat points */}
+                <div className="absolute top-1/6 right-1/2 w-12 h-12 bg-yellow-400/20 rounded-full blur-md"></div>
+                <div className="absolute bottom-1/6 left-1/2 w-14 h-14 bg-orange-400/25 rounded-full blur-md"></div>
               </>
             )}
 
@@ -269,8 +303,10 @@ const Map = () => {
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <div className="text-center p-6 bg-white/90 dark:bg-card/90 rounded-lg shadow-lg pointer-events-auto">
                 <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-                <p className="text-lg font-medium text-muted-foreground mb-2">Interactive Map View</p>
-                <p className="text-sm text-muted-foreground mb-3">Full map integration coming soon</p>
+                <p className="text-lg font-medium text-muted-foreground mb-2">Interactive Heat Map</p>
+                <p className="text-sm text-muted-foreground mb-3">
+                  {selectedLayers.heatmap ? 'Heat map visualization active' : 'Enable heat map to see issue density'}
+                </p>
                 <div className="flex items-center justify-center space-x-3">
                   <Badge variant="outline">
                     {mockIssues.length} Issues
@@ -278,6 +314,11 @@ const Map = () => {
                   <Badge variant="outline">
                     {wards.length} Wards
                   </Badge>
+                  {selectedLayers.heatmap && (
+                    <Badge variant="destructive">
+                      25 Hot Spots
+                    </Badge>
+                  )}
                 </div>
               </div>
             </div>
