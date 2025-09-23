@@ -33,13 +33,24 @@ export function Header() {
 
       {/* Centered Hindi Text */}
       <div className="absolute left-1/2 transform -translate-x-1/2 hidden md:flex flex-col items-center">
-        <div className="text-5xl font-bold text-primary leading-tight">
-          समाधान-Admin
-        </div>
-        <div className="text-sm text-muted-foreground mt-1 flex items-end space-x-1">
-          - आत्मनिर्भर भारत
-        </div>
-      </div>
+  {/* Row for logo + title */}
+  <div className="flex items-center space-x-3">
+    <img
+      src="/logo.jpg" // if in /public
+      alt="Logo"
+      className="w-16 h-18 mt-3 rounded-full object-cover shadow-md"
+    />
+    <div className="text-5xl font-bold text-primary leading-tight">
+      समाधान-Admin
+    </div>
+  </div>
+
+  
+  <div className="text-sm text-muted-foreground mt-2">
+    - आत्मनिर्भर भारत
+  </div>
+</div>
+
 
       {/* Actions - Right Side */}
       <div className="flex items-center space-x-4">
