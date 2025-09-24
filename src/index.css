@@ -73,6 +73,32 @@
     --sidebar-border: 210 20% 88%;
     --sidebar-ring: 217 91% 25%;
   }
+  /* Make sure Leaflet CSS is loaded */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}
+
+.custom-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  padding: 0;
+}
+
+/* Custom popup styling */
+.leaflet-popup-tip {
+  background: white;
+}
 
   .dark {
     /* Dark theme for professional civic interface */
